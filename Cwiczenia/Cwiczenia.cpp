@@ -469,7 +469,10 @@ void srednia_kopia_nakoniec(node *&H)
 		{
 			if (srednia < s->val)
 			{
-				push_last(H1, s->val);
+				//for (int k = 0; k < s->val; k++)	//	<-- w przypadku kopii k-razy, danego elementu
+				//{
+					push_last(H1, s->val);
+				//}
 			}
 			s = s->next;
 		}
@@ -668,6 +671,59 @@ void modulo_del(node *&H)
 	}
 }
 
+// zamiana x z ostatnim elementem na liœcie
+void swap_x_last(node *&H, int x)
+{
+	node *p = H;
+	if (H != NULL && p->next != NULL)
+	{
+		while (p->next != NULL)
+		{
+			p = p->next;
+		}
+		if (p->val != x)
+		{
+			if (H->val == x)
+			{
+				swap_first_last(H);
+			}
+			else
+			{
+				node *s = H;
+				while (s->next != NULL && s->next->val != x)
+				{
+					s = s->next;
+				}
+				
+				if (s->next != NULL)
+				{
+					node *tmp = s->next;
+					if (tmp->next->next == NULL)
+					{
+						s->next = tmp->next;
+						tmp->next = p->next;
+						p->next = tmp;
+					}
+					else
+					{
+						node *x = H;
+						while (x->next->next != NULL)
+						{
+							x = x->next;
+						}
+						s->next = tmp->next;
+						x->next = p->next;
+						tmp->next = x->next;
+						x->next = tmp;
+						p->next = s->next;
+						s->next = p;
+					}
+				}
+			}
+		}
+	}
+}
+
 // sortowanie
 void sort(node * &H) {
 	node * max = H;
@@ -724,26 +780,20 @@ void rev(node *&H)
 	H2 = NULL;
 }
 
-
-
 int main()
 {
 	node *H = NULL;
 	node *H1 = NULL;
 
-
-
-	push(H, 6);
+	push(H, 10);
 	push(H, 6);
 	push(H, 7);
-	push(H, 5);
-	push(H, 9);
-	push(H, 10);
+	push(H, 3);
+	push(H, 4);
+	push(H, 1);
 	
-
-
 	show(H);
-	modulo_del(H);
+	swap_x_last(H, 4);
 	show(H);
 
 	system("pause");
